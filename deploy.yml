@@ -5,29 +5,29 @@
   vars:
     ansible_sudo_pass: admin
   pre_tasks:
-    - name: Install EPEL Repo
-      package: name=epel-release state=present
+    - name : "Install git & wget"
+      package :
+        name: '{{ item }}'
+        state: present
       when: ansible_distribution == "CentOS"
+      loop:
+        - epel-release
+        - git
+        - wget
     - name: Intall python_pip
       yum: name=python-pip state=present update_cache=yes
     - name: Install docker python
       pip: name=docker-py
   tasks:
+    - name: copy website file template
+      template: 
+        src:
     - name: Create Apache container
       docker_container:
         name: webapp
         image: httpd
         ports:
           - "80:80"
-  tasks:
-    - name : "Install git & wget"
-      yum : 
-        name: '{{ item }}'
-        state: present
-      loop:
-        - git
-        - wget
-      #when: ansible_os_family == 'centos'
  
     
 
